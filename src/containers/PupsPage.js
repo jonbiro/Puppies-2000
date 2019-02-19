@@ -1,0 +1,108 @@
+import React from "react";
+import PupCollection from "./PupCollection";
+import PupsGoingOnAWalk from "./PupsGoingOnAWalk";
+import PupSpecs from "../components/PupSpecs";
+import PupForm from "../components/PupForm";
+
+class PupsPage extends React.Component {
+  state = {
+    pups: [],
+    myPups: [],
+    specView: false,
+    currentPup: null,
+    searchTerm: ""
+  };
+
+  componentDidMount() {
+    fetch("https://api.TheDogAPI.com/v1/breeds", {
+      method: "GET",
+      headers: {
+        "x-api-key": "3deef0ea-1e8b-4ac6-b3ec-9f7346588af7"
+      }
+    })
+      .then(res => res.json())
+      .then(pups => {
+        this.setState({
+          pups: pups
+        });
+      });
+  }
+
+  displayCurrentView(specsView) {
+    if (specsView) {
+      return (
+        <PupSpecs
+          pup={this.state.currentPup}
+          handleLibrary={{ enlist: this.addPup, back: this.toggleCurrentView }}
+          handleDeletedPup={this.handleDeletedPup}
+        />
+      );
+    } else {
+      return (
+        <PupCollection
+          pups={this.filteredPups(this.state.searchTerm)}
+          handleClick={this.setCurrentPup}
+          handleSearchChange={this.updateSearchTerm}
+          handleDeletedPup={this.handleDeletedPup}
+        />
+      );
+    }
+  }
+  filteredPups(searchTerm) {
+    return this.state.pups.filter(pup =>
+      pup.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  addPup = pup => {
+    const newPups = Array.from(new Set([...this.state.myPups, pup]));
+    this.setState({ myPups: newPups });
+  };
+  removePup = deletePup => {
+    const newPups = this.state.myPups.filter(pup => pup.id !== deletePup.id);
+    this.setState({ myPups: newPups });
+  };
+  toggleCurrentView = () => {
+    let specView = !this.state.specView;
+    this.setState({ specView });
+  };
+  setCurrentPup = currentPup => {
+    this.setState({ currentPup });
+    this.toggleCurrentView();
+  };
+  updateSearchTerm = e => {
+    this.setState({ searchTerm: e.target.value }, () =>
+      console.log(this.state.searchTerm)
+    );
+  };
+
+  newPup = pup => {
+    this.setState({ pups: [...this.state.pups, pup] });
+  };
+
+  handleDeletedPup = deletedPup => {
+    let puppies = this.state.pups.filter(
+      pup => pup.id !== deletedPup.id
+    );
+    this.setState({pups: puppies });
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>Pups Going on a Walk:</h2>
+        <br />
+        <PupsGoingOnAWalk
+          pups={this.state.myPups}
+          handleClick={this.removePup}
+        />
+        <br /><hr />
+          <PupForm state={this.state.pups} newPup={this.newPup} />
+<br /><hr />
+          {this.displayCurrentView(this.state.specView)}
+      </div>
+    );
+  }
+}
+
+export default PupsPage;
