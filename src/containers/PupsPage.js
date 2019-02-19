@@ -7,7 +7,7 @@ import PupForm from "../components/PupForm";
 class PupsPage extends React.Component {
   state = {
     pups: [],
-    myPups: [],
+    walkingPups: [],
     specView: false,
     currentPup: null,
     searchTerm: ""
@@ -48,6 +48,7 @@ class PupsPage extends React.Component {
       );
     }
   }
+
   filteredPups(searchTerm) {
     return this.state.pups.filter(pup =>
       pup.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -61,13 +62,13 @@ class PupsPage extends React.Component {
   };
 
   addPup = pup => {
-    const newPups = Array.from(new Set([...this.state.myPups, pup]));
-    this.setState({ myPups: newPups });
+    const newPups = Array.from(new Set([...this.state.walkingPups, pup]));
+    this.setState({ walkingPups: newPups });
   };
 
   removePup = deletePup => {
-    const newPups = this.state.myPups.filter(pup => pup.id !== deletePup.id);
-    this.setState({ myPups: newPups });
+    const newPups = this.state.walkingPups.filter(pup => pup.id !== deletePup.id);
+    this.setState({ walkingPups: newPups });
   };
 
   toggleCurrentView = () => {
@@ -95,7 +96,7 @@ class PupsPage extends React.Component {
         <h2>Pups Going on a Walk:</h2>
         <br />
         <PupsGoingOnAWalk
-          pups={this.state.myPups}
+          pups={this.state.walkingPups}
           handleClick={this.removePup}
         />
         <br />
@@ -103,7 +104,6 @@ class PupsPage extends React.Component {
         {this.displayCurrentView(this.state.specView)}
         <br />
         <hr />
-
         <PupForm state={this.state.pups} newPup={this.newPup} />
       </div>
     );

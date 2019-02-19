@@ -32,7 +32,7 @@ state={
         return (
             <div>
                 {/*<h2>{this.props.create ? "Create" : "Edit"} Post:</h2>*/}
-                Create a Pup:
+                Create/Edit a Pup:
                 <form onSubmit={this.handleOnSubmit}>
                     <input
                         type="text"
