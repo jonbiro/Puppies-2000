@@ -1,7 +1,7 @@
 import React from "react";
 import PupCollection from "./PupCollection";
 import PupsGoingOnAWalk from "./PupsGoingOnAWalk";
-import PupSpecs from "../components/PupSpecs";
+import PupDetails from "../components/PupDetails";
 import PupForm from "../components/PupForm";
 
 class PupsPage extends React.Component {
@@ -31,7 +31,7 @@ class PupsPage extends React.Component {
   displayCurrentView(specsView) {
     if (specsView) {
       return (
-        <PupSpecs
+        <PupDetails
           pup={this.state.currentPup}
           handleLibrary={{ enlist: this.addPup, back: this.toggleCurrentView }}
           handleDeletedPup={this.handleDeletedPup}
@@ -54,26 +54,30 @@ class PupsPage extends React.Component {
     );
   }
 
-  addPup = pup => {
-    const newPups = Array.from(new Set([...this.state.myPups, pup]));
-    this.setState({ myPups: newPups });
-  };
-  removePup = deletePup => {
-    const newPups = this.state.myPups.filter(pup => pup.id !== deletePup.id);
-    this.setState({ myPups: newPups });
-  };
-  toggleCurrentView = () => {
-    let specView = !this.state.specView;
-    this.setState({ specView });
-  };
-  setCurrentPup = currentPup => {
-    this.setState({ currentPup });
-    this.toggleCurrentView();
-  };
   updateSearchTerm = e => {
     this.setState({ searchTerm: e.target.value }, () =>
       console.log(this.state.searchTerm)
     );
+  };
+
+  addPup = pup => {
+    const newPups = Array.from(new Set([...this.state.myPups, pup]));
+    this.setState({ myPups: newPups });
+  };
+
+  removePup = deletePup => {
+    const newPups = this.state.myPups.filter(pup => pup.id !== deletePup.id);
+    this.setState({ myPups: newPups });
+  };
+
+  toggleCurrentView = () => {
+    let specView = !this.state.specView;
+    this.setState({ specView });
+  };
+
+  setCurrentPup = currentPup => {
+    this.setState({ currentPup });
+    this.toggleCurrentView();
   };
 
   newPup = pup => {
@@ -81,25 +85,26 @@ class PupsPage extends React.Component {
   };
 
   handleDeletedPup = deletedPup => {
-    let puppies = this.state.pups.filter(
-      pup => pup.id !== deletedPup.id
-    );
-    this.setState({pups: puppies });
+    let puppies = this.state.pups.filter(pup => pup.id !== deletedPup.id);
+    this.setState({ pups: puppies });
   };
 
   render() {
     return (
-      <div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <h2>Pups Going on a Walk:</h2>
         <br />
         <PupsGoingOnAWalk
           pups={this.state.myPups}
           handleClick={this.removePup}
         />
-        <br /><hr />
-          <PupForm state={this.state.pups} newPup={this.newPup} />
-<br /><hr />
-          {this.displayCurrentView(this.state.specView)}
+        <br />
+        <hr />
+        {this.displayCurrentView(this.state.specView)}
+        <br />
+        <hr />
+
+        <PupForm state={this.state.pups} newPup={this.newPup} />
       </div>
     );
   }

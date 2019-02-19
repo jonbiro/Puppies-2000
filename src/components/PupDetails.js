@@ -1,6 +1,6 @@
 import React from "react";
 
-const PupSpecs = props => {
+const PupDetails = props => {
   let { pup, handleLibrary } = props;
 
   return (
@@ -33,4 +33,4 @@ const PupSpecs = props => {
   );
 };
 
-export default PupSpecs;
+export default PupDetails;
